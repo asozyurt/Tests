@@ -1,0 +1,9 @@
+﻿Replace these values 
+
+
+#PROXY_USER_USERNAME# - Proxy UserName
+#PROXY_USER_PASSWORD# - Proxy Password
+#DBSERVER# - DB Server Name Or Ip
+#DBDATABASEINSTANCE# - Database Initial Catalog
+#DBUSERNAME# - Db User Name
+#DBPASSWORD# - Db User Password
