@@ -49,6 +49,7 @@
     <Compile Include="Dto\BaseDto.cs" />
     <Compile Include="Enum\UserStatus.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UserContext.cs" />
     <Compile Include="Utility\Configuration.cs" />
   </ItemGroup>
   <ItemGroup>

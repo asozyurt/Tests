@@ -4,6 +4,9 @@ namespace HeadlessBrowser.Common
 {
     public class Constants
     {
+        public const int STATUS_CHECK_INTERVAL_IN_MINUTES = 5;
+        public const int EXPORT_THRESHOLD_COUNT = 250;
+        public const string MAIN_RUNNER_USER = "MAINRUNNER";
         public const string PROXY_USER_CONFIG_KEY = "PROXY_USER";
         public const string PROXY_USER_PASSWORD_CONFIG_KEY = "PROXY_USER_PASSWORD";
 

@@ -21,5 +21,13 @@ namespace HeadlessBrowser.Service
         {
             return TestsDbOperations.GetUsersByStatus(status);
         }
+        public static void UpdateUserStatus(long userId, UserStatus status)
+        {
+            TestsDbOperations.UpdateUserStatus(userId,status);
+        }
+        public static void BulkUpdateUserStatus(List<ImaginaryUserDto> users, UserStatus status)
+        {
+            TestsDbOperations.BulkUpdateUserStatus(users, status);
+        }
     }
 }

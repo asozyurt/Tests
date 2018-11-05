@@ -1,4 +1,5 @@
-﻿using HeadlessBrowser.Common.Dto;
+﻿using HeadlessBrowser.Common;
+using HeadlessBrowser.Common.Dto;
 using HeadlessBrowser.Common.Enum;
 using System;
 using System.Collections.Generic;
@@ -39,12 +40,12 @@ namespace HeadlessBrowser.DataLayer
                 {
                     Id = t.Id,
                     BirthDate = t.Birthdate ?? DateTime.MinValue,
-                    CreateDate=t.CreateDate,
-                    CreateUser =t.CreateUser,
-                    Email =t.Email,
-                    Gender =t.Gender,
-                    Name=t.Name,
-                    PhoneNumber =t.PhoneNumber,
+                    CreateDate = t.CreateDate,
+                    CreateUser = t.CreateUser,
+                    Email = t.Email,
+                    Gender = t.Gender,
+                    Name = t.Name,
+                    PhoneNumber = t.PhoneNumber,
                     Status = (UserStatus)Enum.Parse(typeof(UserStatus), t.Status),
                     Surname = t.Surname,
                     UpdateDate = t.UpdateDate,
@@ -54,6 +55,28 @@ namespace HeadlessBrowser.DataLayer
             }
 
             return result;
+        }
+
+        public static void UpdateUserStatus(long userId, UserStatus status)
+        {
+            BulkUpdateUserStatus(new List<ImaginaryUserDto> { new ImaginaryUserDto { Id = userId } }, status);
+        }
+
+        public static void BulkUpdateUserStatus(List<ImaginaryUserDto> users, UserStatus status)
+        {
+            DateTime now = DateTime.Now;
+
+            using (TestDbEntities db = new TestDbEntities())
+            {
+                foreach (var user in users)
+                {
+                    var dbEntity = db.ImaginaryUsers.Find(user.Id);
+                    dbEntity.Status = status.ToString();
+                    dbEntity.UpdateDate = now;
+                    dbEntity.UpdateUser = UserContext.CurrentUser;
+                }
+                db.SaveChanges();
+            }
         }
     }
 }

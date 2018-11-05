@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessBrowser.Service", "
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessBrowser.TestRunner", "HeadlessBrowser.TestRunner\HeadlessBrowser.TestRunner.csproj", "{52F64271-0C55-4C38-B590-4BA561397AFD}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessBrowser.MainRunner", "HeadlessBrowser.MainRunner\HeadlessBrowser.MainRunner.csproj", "{64626EC3-A4AD-424E-ABC9-712C6A3E382A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,10 @@ Global
 		{52F64271-0C55-4C38-B590-4BA561397AFD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52F64271-0C55-4C38-B590-4BA561397AFD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52F64271-0C55-4C38-B590-4BA561397AFD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

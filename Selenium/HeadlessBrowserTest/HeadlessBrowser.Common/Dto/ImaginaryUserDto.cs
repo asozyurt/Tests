@@ -13,5 +13,11 @@ namespace HeadlessBrowser.Common.Dto
         public string PhoneNumber { get; set; }
         public string Gender { get; set; }
         public DateTime BirthDate { get; set; }
+        public override string ToString()
+        {
+            return base.ToString();
+            // TODO: Format Line
+        }
     }
+
 }
