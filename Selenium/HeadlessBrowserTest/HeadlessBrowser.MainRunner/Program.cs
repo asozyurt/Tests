@@ -13,7 +13,7 @@ namespace HeadlessBrowser.MainRunner
             Console.WriteLine("Main Process Started");
             ThreadPool.QueueUserWorkItem(Process);
             ThreadPool.QueueUserWorkItem(StatusCheck);
-            Timer timer = new Timer(StatusCheck, null, 0, Constants.STATUS_CHECK_INTERVAL_IN_MINUTES * 1000);
+            Timer timer = new Timer(StatusCheck, null, 0, Constants.STATUS_CHECK_INTERVAL_IN_MINUTES * 60 * 1000);
             Console.WriteLine("Main Process Ended");
             Console.Read();
         }
