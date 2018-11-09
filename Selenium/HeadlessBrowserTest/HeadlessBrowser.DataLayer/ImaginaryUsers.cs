@@ -22,10 +22,13 @@ namespace HeadlessBrowser.DataLayer
         public string Email { get; set; }
         public string PhoneNumber { get; set; }
         public string Gender { get; set; }
-        public Nullable<System.DateTime> Birthdate { get; set; }
         public System.DateTime CreateDate { get; set; }
         public string CreateUser { get; set; }
         public System.DateTime UpdateDate { get; set; }
         public string UpdateUser { get; set; }
+        public Nullable<System.DateTime> BirthDate { get; set; }
+        public string Password { get; set; }
+        public string Cookie { get; set; }
+        public string IpAddress { get; set; }
     }
 }

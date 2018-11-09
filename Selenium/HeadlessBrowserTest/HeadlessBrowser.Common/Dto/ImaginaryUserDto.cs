@@ -13,6 +13,9 @@ namespace HeadlessBrowser.Common.Dto
         public string PhoneNumber { get; set; }
         public string Gender { get; set; }
         public DateTime BirthDate { get; set; }
+        public string Password { get; set; }
+        public string IpAddress { get; set; }
+        public string Cookie { get; set; }
         public override string ToString()
         {
             return base.ToString();

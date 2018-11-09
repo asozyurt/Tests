@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using HeadlessBrowser.Common;
@@ -17,10 +18,10 @@ namespace HeadlessBrowser.TestRunner
         {
             // GetNames
 
-            var allNames = Service.HeadlessBrowserServices.GetAllNames();
+           // var allNames = Service.HeadlessBrowserServices.GetAllNames();
 
             // GetSurnames
-            var allSurNames = Service.HeadlessBrowserServices.GetAllSurnames();
+           // var allSurNames = Service.HeadlessBrowserServices.GetAllSurnames();
 
             // CreateUser
 
@@ -35,8 +36,8 @@ namespace HeadlessBrowser.TestRunner
         public string TestCreateMailAddress()
         {
 
-            var nameArray = Service.HeadlessBrowserServices.GetAllNames().ToArray();
-            var surnameArray = Service.HeadlessBrowserServices.GetAllSurnames().ToArray();
+            var nameArray = ((List<string>)Service.NameServices.GetAllNames().Result).ToArray();
+            var surnameArray = ((List<string>)Service.SurnameServices.GetAllSurnames().Result).ToArray();
             string[] uzanti = { "@mg.q-bitgame.com", "@mg.clubangel.site" };
             Random r = new Random();
 
