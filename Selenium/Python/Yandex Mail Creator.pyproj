@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{f4e68a19-1352-4240-9011-74496a10abd3}</ProjectGuid>
+    <ProjectHome>D:\Geek\GitWorkspace\Tests\Selenium\Python\yandex-mail-creator\</ProjectHome>
+    <StartupFile>main.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <Name>Yandex Mail Creator</Name>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="chromedriver.exe" />
+    <Content Include="FIRSTNAMES_f.txt" />
+    <Content Include="FIRSTNAMES_m.txt" />
+    <Content Include="LASTNAMES.txt" />
+    <Content Include="README.md" />
+    <Content Include="Test.bat" />
+    <Content Include="InfiniteGain.bat" />
+    <Content Include="requirements.txt" />
+    <Content Include="yandexaccounts.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="account.py" />
+    <Compile Include="faker.py" />
+    <Compile Include="main.py" />
+    <Compile Include="webdriver.py" />
+    <Compile Include="WorkerInfo.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="yandex.py" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>

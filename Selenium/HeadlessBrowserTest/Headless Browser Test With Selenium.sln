@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessBrowser.TestRunner"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HeadlessBrowser.MainRunner", "HeadlessBrowser.MainRunner\HeadlessBrowser.MainRunner.csproj", "{64626EC3-A4AD-424E-ABC9-712C6A3E382A}"
 EndProject
+Project("{888888A0-9F3D-457C-B088-3A5042F75D52}") = "Yandex Mail Creator", "..\Python\Yandex Mail Creator.pyproj", "{F4E68A19-1352-4240-9011-74496A10ABD3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,8 @@ Global
 		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{64626EC3-A4AD-424E-ABC9-712C6A3E382A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F4E68A19-1352-4240-9011-74496A10ABD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F4E68A19-1352-4240-9011-74496A10ABD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

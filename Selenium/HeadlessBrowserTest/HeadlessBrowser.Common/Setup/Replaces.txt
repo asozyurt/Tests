@@ -7,3 +7,4 @@
 #DBDATABASEINSTANCE# - Database Initial Catalog
 #DBUSERNAME# - Db User Name
 #DBPASSWORD# - Db User Password
+#CAPTCHAAPI# - Captcha Solver Api

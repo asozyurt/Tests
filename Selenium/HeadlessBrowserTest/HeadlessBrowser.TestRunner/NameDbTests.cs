@@ -46,11 +46,35 @@ namespace HeadlessBrowser.TestRunner
         [TestMethod]
         public void InsertTest()
         {
+            NameDto newRecord = new NameDto
+            {
+                Name = "TestDummyName"
+            };
+
+            ResponseMessage response = Service.NameServices.Insert(newRecord);
+
+            long notExpected = 0L;
+            Assert.IsFalse(response.IsError);
+            Assert.IsNotNull(response.Result);
+            Assert.IsInstanceOfType(response.Result, typeof(NameDto));
+            Assert.AreNotSame(notExpected, ((NameDto)response.Result) .Id);
         }
 
         [TestMethod]
         public void UpdateTest()
         {
+            NameDto newRecord = new NameDto
+            {
+                Name = "TestDummyNameUpdated"
+            };
+
+            ResponseMessage response = Service.NameServices.Update(newRecord);
+
+            string expected = "TestDummyNameUpdated";
+            Assert.IsFalse(response.IsError);
+            Assert.IsNotNull(response.Result);
+            Assert.IsInstanceOfType(response.Result, typeof(NameDto));
+            Assert.AreNotSame(expected, ((NameDto)response.Result).Name);
         }
 
         [TestMethod]

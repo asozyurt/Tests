@@ -94,7 +94,6 @@
     </EntityDeploy>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
     <None Include="packages.config" />
     <None Include="TestsDataModel.edmx.diagram">
       <DependentUpon>TestsDataModel.edmx</DependentUpon>

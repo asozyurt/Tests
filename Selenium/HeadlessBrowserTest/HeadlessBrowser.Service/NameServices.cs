@@ -1,4 +1,6 @@
-﻿using HeadlessBrowser.Common.Message;
+﻿using HeadlessBrowser.Common.Dto;
+using HeadlessBrowser.Common.Message;
+using System;
 using System.Collections.Generic;
 
 namespace HeadlessBrowser.Service
@@ -33,6 +35,16 @@ namespace HeadlessBrowser.Service
                 return ResponseMessage.Ok(result);
             }
             return ResponseMessage.NOk();
+        }
+
+        public static ResponseMessage Insert(NameDto newRecord)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static ResponseMessage Update(NameDto newRecord)
+        {
+            throw new NotImplementedException();
         }
     }
 }
