@@ -8,7 +8,7 @@ pip install -r requirements.txt
 main.py dosyasindaki 2capthca-api-key bolumune 2captcha api key'inizi ekleyin. Creator'un calistigi dizine isletim sisteminizle uyumlu chromedriver indirip atin.
 
 # Yazarlar
-Omer Faruk Ekim & Yavuz Selim Ekim
+(Omer Faruk Ekim & Yavuz Selim Ekim) repo baz alınarak kod düzenlenmiştir. Ahmet Selçuk Özyurt & Muhammet Ulaş
 
 # Installation
 After downloading python source codes download the latest chromedriver from http://chromedriver.chromium.org/downloads. 
