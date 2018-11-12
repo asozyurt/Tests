@@ -2,6 +2,7 @@
 using HeadlessBrowser.Common.Dto;
 using HeadlessBrowser.Common.Enum;
 using HeadlessBrowser.Service;
+using Newtonsoft.Json;
 using OpenQA.Selenium;
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
@@ -22,14 +23,6 @@ namespace HeadlessBrowser.MainRunner
         {
             Setup();
 
-            var fbAccount = CreateFacebookAccount(new ImaginaryUserDto
-            {
-                Name = "",
-            });
-
-            ImaginaryUserServices.UpdateUser(fbAccount);
-
-            Console.Read();
             Console.WriteLine(string.Format("Main Process Started For User: {0}", UserContext.CurrentUser));
             switch (Constants.MODE)
             {
@@ -37,15 +30,16 @@ namespace HeadlessBrowser.MainRunner
                     ThreadPool.QueueUserWorkItem(YandexAccountCreatorProcess);
                     break;
                 case Constants.MODE_FACEBOOK:
-                    ThreadPool.QueueUserWorkItem(FacebookAccountCreatorProcess);
+                    //ThreadPool.QueueUserWorkItem(FacebookAccountCreatorProcess);
+                    FacebookAccountCreatorProcess(null);
                     break;
                 default:
                     Console.WriteLine(string.Format("Mode is not recognized. Control app.config file. Mode:{0}", Constants.MODE));
                     Console.Read();
                     break;
             }
-            ThreadPool.QueueUserWorkItem(StatusCheck);
-            Timer timer = new Timer(StatusCheck, null, 0, Constants.STATUS_CHECK_INTERVAL_IN_MINUTES * 60 * 1000);
+            // ThreadPool.QueueUserWorkItem(StatusCheck);
+            // Timer timer = new Timer(StatusCheck, null, 0, Constants.STATUS_CHECK_INTERVAL_IN_MINUTES * 60 * 1000);
             Console.Read();
         }
 
@@ -100,16 +94,21 @@ namespace HeadlessBrowser.MainRunner
 
                 foreach (var item in mailAccounts)
                 {
-                    // Mark as processing (TODO: Make this method work with id and lastupdate)
-                    ImaginaryUserServices.UpdateUserStatus(item.Id, UserStatus.Processing);
+                    try
+                    {
+                        // Mark as processing (TODO: Make this method work with id and lastupdate)
+                        ImaginaryUserServices.UpdateUserStatus(item.Id, UserStatus.Processing);
+                        var user = CreateFacebookAccount(item);
 
-                    var user = CreateFacebookAccount(item);
-
-                    user.Status = UserStatus.AccountCreated;
-                    ImaginaryUserServices.UpdateUser(user);
+                        ImaginaryUserServices.UpdateUser(user);
+                    }
+                    catch
+                    {
+                        //TODO: Log error
+                    }
                 }
 
-                Thread.Sleep(Constants.THREE_SECONDS_IN_MILLISECOND);
+                Thread.Sleep(Constants.FIVE_SECONDS_IN_MILLISECOND);
             }
         }
 
@@ -175,47 +174,66 @@ namespace HeadlessBrowser.MainRunner
         private static ImaginaryUserDto CreateFacebookAccount(ImaginaryUserDto user)
         {
             var resultDto = user;
-            int isBlock = 0;
-            Random r = new Random();
+            using (ChromeDriver driver = createChromeDriver())
+            {
+                resultDto.IpAddress = getIpAddress(driver);
+                bool fbAccountCreated = registerFacebookAccount(user, driver);
+                Thread.Sleep(5000);
+
+                if (fbAccountCreated)
+                {
+                    resultDto.Status = UserStatus.AccountCreated;
+                    resultDto.Cookie = JsonConvert.SerializeObject(driver.Manage().Cookies.AllCookies);
+                }
+                else
+                {
+                    resultDto.Status = UserStatus.Erroneous;
+                }
+            }
+            // Return updated user
+            return resultDto;
+        }
+
+        private static ChromeDriver createChromeDriver()
+        {
             ChromeOptions options = new ChromeOptions();
             options.AddUserProfilePreference("profile.default_content_setting_values.images", 2);
-            Proxy proxy = new Proxy();
-            proxy.Kind = ProxyKind.Manual;
-            proxy.IsAutoDetect = false;
-            proxy.HttpProxy =
-            proxy.SslProxy = "127.0.0.1:24000";
-            options.Proxy = proxy;
             options.AddArgument("--disable-popup-blocking");
             options.AddArgument("ignore-certificate-errors");
             options.AddArguments("--disable-extensions");
             options.AddArguments("--disable-bundled-ppapi-flash");
             options.AddArguments("--disable-plugins-discovery");
+            Proxy proxy = new Proxy
+            {
+                Kind = ProxyKind.Manual,
+                IsAutoDetect = false,
+                HttpProxy = "127.0.0.1:24000",
+                SslProxy = "127.0.0.1:24000"
+            };
+            options.Proxy = proxy;
 
+            return new ChromeDriver(options);
+        }
 
-            string IPAdres = string.Empty;
-            ChromeDriver driver = new ChromeDriver(options);
-            driver.Navigate().GoToUrl("https://ipapi.com/?utm_source=adwords&utm_medium=cpc&utm_campaign=adwords&utm_term=ip%20api&gclid=Cj0KCQiAw5_fBRCSARIsAGodhk9awZ9Ld2hETPM-_UjsbdnpWYJM3OIa_vyOjY0SScnUe_4Ikm0yi80aAiv3EALw_wcB");
-            IPAdres = driver.FindElement(By.Name("ip_to_lookup")).GetAttribute("value");
-            Console.WriteLine(IPAdres);
-            resultDto.IpAddress = IPAdres;
-
+        private static bool registerFacebookAccount(ImaginaryUserDto user, ChromeDriver driver)
+        {
             driver.Navigate().GoToUrl("https://www.facebook.com/");
             Console.WriteLine("Facebooka gidiliyor.");
             Console.WriteLine(driver.Url);
             var name = driver.FindElement(By.Name("firstname"));
-            SendSlowKey(name, user.Name);
+            sendSlowKey(name, user.Name);
 
             var surname = driver.FindElement(By.Name("lastname"));
-            SendSlowKey(surname, user.Surname);
+            sendSlowKey(surname, user.Surname);
 
             var email = driver.FindElement(By.Name("reg_email__"));
-            SendSlowKey(email, user.Email);
+            sendSlowKey(email, user.Email);
 
             var reemail = driver.FindElement(By.Name("reg_email_confirmation__"));
-            SendSlowKey(reemail, user.Email);
+            sendSlowKey(reemail, user.Email);
 
             var pass = driver.FindElement(By.Name("reg_passwd__"));
-            SendSlowKey(pass, user.Password);
+            sendSlowKey(pass, user.Password);
 
             var dayd = driver.FindElement(By.Id("day"));
             var monthd = driver.FindElement(By.Id("month"));
@@ -240,50 +258,67 @@ namespace HeadlessBrowser.MainRunner
             var submit = driver.FindElement(By.Name("websubmit"));
             submit.Click();
             Console.WriteLine("Hesap Açılıyor.");
-            Thread.Sleep(5000);
+
             try
             {
                 if (!driver.FindElement(By.Id("reg_error_inner")).GetAttribute("value").Contains("hata"))
                 {
-                    isBlock = 1;
+                    return false;
                 }
             }
-            catch (Exception)
-            {
-                isBlock = 0;
-            }
-            if (isBlock == 0)
-            {
-                Thread.Sleep(5000);
-                if (!driver.Url.Contains("checkpoint") && !driver.Url.Equals("https://www.facebook.com/"))
-                {
-                    Thread.Sleep(3000);
-                    driver.FindElement(By.Name("password")).SendKeys(user.Password);
-                    driver.FindElement(By.XPath("//button[@class='_42ft _4jy0 _4jy4 _4jy1 selected _51sy']")).Click();
-                    Thread.Sleep(10000);
-                    driver.Navigate().GoToUrl("https://www.facebook.com/login.php?skip_api_login=1&api_key=2389801228&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv2.9%2Fdialog%2Foauth%3Fredirect_uri%3Dhttps%253A%252F%252Fapps.facebook.com%252Ftexas_holdem%252F%253Ffb_source%253Dbookmark%2526ref%253Dbookmarks%2526count%253D0%2526fb_bmpos%253D_0%26state%3D7915abdffb671c4d225e94768284355c%26scope%3Demail%252Cuser_friends%26client_id%3D2389801228%26ret%3Dlogin%26logger_id%3D3cc88ac4-6e84-0d29-976f-63b299fc6acb&cancel_url=https%3A%2F%2Fapps.facebook.com%2Ftexas_holdem%2F%3Ffb_source%3Dbookmark%26ref%3Dbookmarks%26count%3D0%26fb_bmpos%3D_0%26error%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied%26state%3D7915abdffb671c4d225e94768284355c%23_%3D_&display=page&locale=tr_TR&logger_id=3cc88ac4-6e84-0d29-976f-63b299fc6acb");
-                    Thread.Sleep(10000);
-                    if (!driver.Url.Contains("checkpoint"))
-                    {
-                        var GameSubmit = driver.FindElement(By.Name("__CONFIRM__"));
-                        GameSubmit.Click();
-                        Console.WriteLine("TEXAS BEKLENİYOR.");
-                        Thread.Sleep(5000);
-                    }
-                }
-            }
+            catch (Exception) { /* No exception, process will continue*/ }
 
-            // Update user cookie and Ip
-            return null;
+            Thread.Sleep(5000);
+            if (!driver.Url.Contains("checkpoint") && !driver.Url.Equals("https://www.facebook.com/"))
+            {
+                Thread.Sleep(3000);
+                return connectTexasHoldem(driver, user);
+            }
+            return false;
         }
 
-        private static void SendSlowKey(IWebElement name1, string name2)
+        private static string getIpAddress(ChromeDriver driver)
         {
-            foreach (var key in name2)
+            try
             {
-                name1.SendKeys(key.ToString());
-                Thread.Sleep(127);
+                driver.Navigate().GoToUrl("http://ip-api.com/json?fields=query");
+                var jsonResult = driver.FindElement(By.TagName("body")).Text;
+                var ipInfo = JsonConvert.DeserializeObject<IpInfo>(jsonResult);
+                return ipInfo.query;
             }
+            catch
+            {
+                driver.Navigate().GoToUrl("https://ipapi.com/?utm_source=adwords&utm_medium=cpc&utm_campaign=adwords&utm_term=ip%20api&gclid=Cj0KCQiAw5_fBRCSARIsAGodhk9awZ9Ld2hETPM-_UjsbdnpWYJM3OIa_vyOjY0SScnUe_4Ikm0yi80aAiv3EALw_wcB");
+                return driver.FindElement(By.Name("ip_to_lookup")).GetAttribute("value");
+            }
+
+        }
+
+        private static void sendSlowKey(IWebElement inputElement, string text)
+        {
+            foreach (var key in text)
+            {
+                inputElement.SendKeys(key.ToString());
+                Thread.Sleep(75);
+            }
+        }
+
+        private static bool connectTexasHoldem(ChromeDriver driver, ImaginaryUserDto user)
+        {
+            driver.FindElement(By.Name("password")).SendKeys(user.Password);
+            driver.FindElement(By.XPath("//button[@class='_42ft _4jy0 _4jy4 _4jy1 selected _51sy']")).Click();
+            Thread.Sleep(10000);
+            driver.Navigate().GoToUrl("https://www.facebook.com/login.php?skip_api_login=1&api_key=2389801228&signed_next=1&next=https%3A%2F%2Fwww.facebook.com%2Fv2.9%2Fdialog%2Foauth%3Fredirect_uri%3Dhttps%253A%252F%252Fapps.facebook.com%252Ftexas_holdem%252F%253Ffb_source%253Dbookmark%2526ref%253Dbookmarks%2526count%253D0%2526fb_bmpos%253D_0%26state%3D7915abdffb671c4d225e94768284355c%26scope%3Demail%252Cuser_friends%26client_id%3D2389801228%26ret%3Dlogin%26logger_id%3D3cc88ac4-6e84-0d29-976f-63b299fc6acb&cancel_url=https%3A%2F%2Fapps.facebook.com%2Ftexas_holdem%2F%3Ffb_source%3Dbookmark%26ref%3Dbookmarks%26count%3D0%26fb_bmpos%3D_0%26error%3Daccess_denied%26error_code%3D200%26error_description%3DPermissions%2Berror%26error_reason%3Duser_denied%26state%3D7915abdffb671c4d225e94768284355c%23_%3D_&display=page&locale=tr_TR&logger_id=3cc88ac4-6e84-0d29-976f-63b299fc6acb");
+            Thread.Sleep(10000);
+            if (!driver.Url.Contains("checkpoint"))
+            {
+                var GameSubmit = driver.FindElement(By.Name("__CONFIRM__"));
+                GameSubmit.Click();
+                Thread.Sleep(5000);
+                return true;
+            }
+
+            return false;
         }
     }
 }

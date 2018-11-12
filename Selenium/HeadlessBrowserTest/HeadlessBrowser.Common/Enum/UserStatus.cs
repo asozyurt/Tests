@@ -6,6 +6,7 @@
         EmailCreated,
         Processing,
         AccountCreated,
-        Exported
+        Exported,
+        Erroneous
     }
 }

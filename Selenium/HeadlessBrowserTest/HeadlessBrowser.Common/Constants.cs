@@ -6,7 +6,7 @@ namespace HeadlessBrowser.Common
     {
         public const int STATUS_CHECK_INTERVAL_IN_MINUTES = 5;
         public const int EXPORT_THRESHOLD_COUNT = 250;
-        public const int THREE_SECONDS_IN_MILLISECOND = 3000;
+        public const int FIVE_SECONDS_IN_MILLISECOND = 5000;
         public const string PROXY_USER_CONFIG_KEY = "PROXY_USER";
         public const string CURRENT_USER_CONFIG_KEY = "CURRENT_USER";
         public const string MODE_CONFIG_KEY = "MODE";

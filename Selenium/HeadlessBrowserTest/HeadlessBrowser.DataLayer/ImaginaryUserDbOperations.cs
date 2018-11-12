@@ -103,7 +103,7 @@ namespace HeadlessBrowser.DataLayer
 
             using (TestDbEntities db = new TestDbEntities())
             {
-                db.ImaginaryUsers.Where(x => x.Status.Equals(status.ToString())).Take(takeCount).ToList().ForEach(t => result.Add(new ImaginaryUserDto
+                db.ImaginaryUsers.Where(x => x.Status.Equals(status.ToString())).Take(takeCount).OrderBy(x => x.Id).ToList().ForEach(t => result.Add(new ImaginaryUserDto
                 {
                     Id = t.Id,
                     BirthDate = t.BirthDate ?? DateTime.MinValue,

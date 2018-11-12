@@ -46,6 +46,7 @@
   <ItemGroup>
     <Compile Include="Constants.cs" />
     <Compile Include="Dto\ImaginaryUserDto.cs" />
+    <Compile Include="Message\IpInfo.cs" />
     <Compile Include="Dto\SurnameDto.cs" />
     <Compile Include="Dto\NameDto.cs" />
     <Compile Include="Dto\BaseDto.cs" />
